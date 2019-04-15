@@ -111,6 +111,7 @@ def clean_list_data(df_org):
     df = pd.get_dummies(data=df,columns=['cancellation_policy'],prefix='cancel',drop_first=True)
 
     df['require_guest_profile_picture']=df['require_guest_profile_picture'].map({'f':False,'t':True})
+    df['require_guest_phone_verification']=df['require_guest_phone_verification'].map({'f':False,'t':True})
 
     #price
     df['price'] = df['price'].astype('str')
