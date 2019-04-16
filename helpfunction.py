@@ -36,7 +36,8 @@ def clean_list_data(df_org):
     feature_list=['neighbourhood','neighbourhood_cleansed','city','longitude','latitude',
               'is_location_exact','property_type','room_type','accommodates','bathrooms','beds',
              'bed_type','amenities','cleaning_fee','guests_included','extra_people',
-              'availability_30','availability_365','number_of_reviews','instant_bookable','cancellation_policy',
+              'availability_30','availability_60','availability_90','availability_365','number_of_reviews',
+              'instant_bookable','cancellation_policy',
              'require_guest_profile_picture','require_guest_phone_verification','calculated_host_listings_count',
              'reviews_per_month','price']
 
