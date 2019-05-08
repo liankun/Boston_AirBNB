@@ -7,7 +7,7 @@ sklearn,pandas,seaborn,numpy,matplotlib,nltk,gensim,codecs,spacy
 calendar_ana.ipynb : analysis of calendar data <br>
 listings_ana.ipynb : analysis of listings data <br>
 Review_Ana.ipynb   : analysis of the review data <br>
-other files: they are raw analysis, which can be ignore
+helpfunction.py    : useful function for analysis
 ## License
 The codes are free to use
 
