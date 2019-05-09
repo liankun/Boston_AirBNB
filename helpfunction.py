@@ -2,22 +2,42 @@ import pandas as pd
 import numpy as np
 
 def city_map(city):
-    #some city names are the same
-    #this function map them to the 
-    #same city
-    names_map={'ROXBURY CROSSING':'Roxbury Crossing','Jamaica Plain, Boston':'Jamaica Plain','Boston, Massachusetts, US':'Boston',
-              'Jamaica Plain ':'Jamaica Plain','ALLSTON':'Allston','South End, Boston':'South End Boston','Boston ':'Boston',
-              'Roslindale, Boston':'Roslindale','Jamaica plain ':'Jamaica Plain','dorchester, boston ':'Dorchester',
-              'Boston (Charlestown)':'Charlestown','Brighton ':'Brighton','Jamaica Plain, MA':'Jamaica Plain',
-               'Boston (Jamaica Plain)':'Jamaica Plain','波士顿':'Boston','boston':'Boston','Jamaica Plain (Boston)':'Jamaica Plain'}
+    """
+    input:string
+    #output:string
+    #some cities are the same
+    #for example ALLSTON and Allston
+    #this function will map to the same city
+    """
+    names_map={'ROXBURY CROSSING':'Roxbury Crossing',
+            'Jamaica Plain, Boston':'Jamaica Plain',
+            'Boston, Massachusetts, US':'Boston',
+            'Jamaica Plain ':'Jamaica Plain',
+            'ALLSTON':'Allston',
+            'South End, Boston':'South End Boston',
+            'Boston ':'Boston',
+            'Roslindale, Boston':'Roslindale',
+            'Jamaica plain ':'Jamaica Plain',
+            'dorchester, boston ':'Dorchester',
+            'Boston (Charlestown)':'Charlestown',
+            'Brighton ':'Brighton',
+            'Jamaica Plain, MA':'Jamaica Plain',
+            'Boston (Jamaica Plain)':'Jamaica Plain',
+            '波士顿':'Boston',
+            'boston':'Boston',
+            'Jamaica Plain (Boston)':'Jamaica Plain'}
     if city in names_map:
         return names_map[city]
     else: 
         return city
 
 def dollar_to_float(d):
-    #transform $??? to 
-    #the float
+    """
+    input : string
+    output : float
+    #for 'nan', will return np.nan
+    #for others, will drop '$' and ','
+    """
     if d=='nan':
         return np.nan
     res = ""
@@ -27,19 +47,75 @@ def dollar_to_float(d):
     return float(res)
 
 def clean_list_data(df_org):
-    #only for the selected features
-    #input: listing data
-    #output: data after cleaning
-    #will perform data cleaning and 
-    #engeerning
-   
-    feature_list=['neighbourhood','neighbourhood_cleansed','city','longitude','latitude',
-              'is_location_exact','property_type','room_type','accommodates','bathrooms','beds',
-             'bed_type','amenities','cleaning_fee','guests_included','extra_people',
-              'availability_30','availability_60','availability_90','availability_365','number_of_reviews',
-              'instant_bookable','cancellation_policy',
-             'require_guest_profile_picture','require_guest_phone_verification','calculated_host_listings_count',
-             'reviews_per_month','price']
+    """
+    input: listing data frame
+    output: data frame after cleaning
+    only selected  the following features:
+    'neighbourhood',
+    'neighbourhood_cleansed',
+    'city',
+    'longitude',
+    'latitude',
+    'is_location_exact',
+    'property_type',
+    'room_type',
+    'accommodates',
+    'bathrooms',
+    'beds',
+    'bed_type',
+    'amenities',
+    'cleaning_fee',
+    'guests_included',
+    'extra_people', 
+    'availability_30', 
+    'availability_60',
+    'availability_90',
+    'availability_365',
+    'number_of_reviews',
+    'instant_bookable',
+    'cancellation_policy',
+    'require_guest_profile_picture',
+    'require_guest_phone_verification',
+    'calculated_host_listings_count',
+    'reviews_per_month',
+    'price'
+    will perform data cleaning and 
+    engeerning
+    for numerical data, will create a new
+    column for the NaN
+    for object data with two values,will map to
+    ture or false
+    for other object data, use one hot encoding
+    for amenity: will create column for each amenity 
+    """
+    feature_list=['neighbourhood',
+              'neighbourhood_cleansed',
+              'city',
+              'longitude',
+              'latitude',
+              'is_location_exact',
+              'property_type',
+              'room_type',
+              'accommodates',
+              'bathrooms',
+              'beds',
+              'bed_type',
+              'amenities',
+              'cleaning_fee',
+              'guests_included',
+              'extra_people', 
+              'availability_30', 
+              'availability_60',
+              'availability_90',
+              'availability_365',
+              'number_of_reviews',
+              'instant_bookable',
+              'cancellation_policy',
+              'require_guest_profile_picture',
+              'require_guest_phone_verification',
+              'calculated_host_listings_count',
+              'reviews_per_month',
+              'price']
 
     df = df_org[feature_list].copy()
     #numerical features
@@ -54,28 +130,43 @@ def clean_list_data(df_org):
     #none numerical features
     print("process none numerical features")
     #neighbourhood
-    df = pd.get_dummies(data=df,columns=['neighbourhood'],prefix='neighborhood')
+    df = pd.get_dummies(data=df,
+                  columns=['neighbourhood'],
+                  prefix='neighborhood')
 
     #neighbourhood_cleansed
-    df = pd.get_dummies(data=df,columns=['neighbourhood_cleansed'],prefix='neighbourhood_cleansed',drop_first=True)
+    df=pd.get_dummies(data=df,
+                columns=['neighbourhood_cleansed'],
+                prefix='neighbourhood_cleansed',
+                drop_first=True)
    
     #clean city
 
     df['city'] = df['city'].apply(city_map)
 
-    df = pd.get_dummies(data=df,columns=['city'],prefix='city')
+    df = pd.get_dummies(data=df,
+                  columns=['city'],
+                  prefix='city')
 
     #is_location_exact
     df['is_location_exact']=df['is_location_exact'].map({'t':True,'f':False})
 
     #property_type
-    df = pd.get_dummies(data=df,columns=['property_type'],prefix='property_type')
+    df = pd.get_dummies(data=df,
+                 columns=['property_type'],
+                 prefix='property_type')
 
     #room_type
-    df = pd.get_dummies(data=df,columns=['room_type'],prefix='room_type',drop_first=True)
+    df = pd.get_dummies(data=df,
+                 columns=['room_type'],
+                 prefix='room_type',
+                 drop_first=True)
 
     #bed_type
-    df = pd.get_dummies(data=df,columns=['bed_type'],prefix='bed_type',drop_first=True)
+    df = pd.get_dummies(data=df,
+                 columns=['bed_type'],
+                 prefix='bed_type',
+                 drop_first=True)
 
     #amenity
     amenity_list=[]
@@ -109,8 +200,10 @@ def clean_list_data(df_org):
     df['instant_bookable']=df['instant_bookable'].map({'f':False,'t':True})
 
     #cancellation policy
-    df = pd.get_dummies(data=df,columns=['cancellation_policy'],prefix='cancel',drop_first=True)
-
+    df = pd.get_dummies(data=df,
+                 columns=['cancellation_policy'],
+                 prefix='cancel',
+                 drop_first=True)
     df['require_guest_profile_picture']=df['require_guest_profile_picture'].map({'f':False,'t':True})
     df['require_guest_phone_verification']=df['require_guest_phone_verification'].map({'f':False,'t':True})
 
